@@ -1,15 +1,31 @@
 from modules.Database import Database
-from modules.Schema import Schema
+from modules.Entity import Entity
 from modules.Vortex import Vortex
+from configs import configs
 
 
 def main():
-    db = Database('postgres', 'toor', 'localhost', '5432', 'Vortex')
-    db.disconnect()
+    # db = Database(configs.DATABASE)
+    #
+    # # db.execute("""  INSERT INTO Vortex (ID, NAME, CAPITAL) VALUES (%s,%s,%s) """, (1, 'One Plus', 20000))
+    # db.fetch("""  SELECT 3 * 4; """)
+    # db.disconnect()
 
-    # vortex = Vortex
-    # result = vortex.get_results()
-    # print(result)
+    schema = {
+        "name": None,
+        "address": None,
+        "description": None,
+        "prestation": None,
+        "phone_number": None,
+        "website": None
+    }
+
+    entity = Entity(schema)
+
+    vortex = Vortex(configs)
+    results, stats = vortex.get_results(entity)
+    print(stats)
+    print(results)
 
 
 if __name__ == "__main__":
