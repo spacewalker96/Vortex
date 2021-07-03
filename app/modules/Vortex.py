@@ -6,6 +6,10 @@ from bs4 import BeautifulSoup
 class Vortex:
     def __init__(self, configs):
         self.Config = configs
+        self.Results = []
+        self.Stats = {
+            "num_results": 0
+        }
 
     def build_request(self, page):
         request = self.Config.URL
@@ -35,22 +39,15 @@ class Vortex:
         return page_results
 
     def get_results(self, entity):
-        results = []
-        stats = {
-            "num_results": 0
-        }
-
         page = 1
         while True:
             request = self.build_request(page)
             page_results = self.get_page_results(request, entity)
             if page_results:
-                results.extend(page_results)
+                self.Results.extend(page_results)
             else:
                 print("[+] Done!")
                 break
             page += 1
 
-        stats["num_results"] = len(results)
-
-        return results, stats
+        self.Stats["num_results"] = len(self.Results)

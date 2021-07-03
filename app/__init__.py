@@ -23,9 +23,9 @@ def main():
     entity = Entity(schema)
 
     vortex = Vortex(configs)
-    results, stats = vortex.get_results(entity)
-    print(stats)
-    print(results)
+    vortex.get_results(entity)
+    print(vortex.Results)
+    print(vortex.Stats)
 
 
 if __name__ == "__main__":
