@@ -1,3 +1,10 @@
+DATABASE = {
+    "user": "postgres",
+    "password": "toor",
+    "host": "localhost",
+    "port": "5432",
+    "database": "Vortex"
+}
 URL = "https://www.telecontact.ma/trouver/index.php?"
 QUERY_PARAMS = {
     "nxo": "moteur",
