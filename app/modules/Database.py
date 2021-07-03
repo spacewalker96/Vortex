@@ -2,28 +2,39 @@ import psycopg2
 
 
 class Database:
-    def __init__(self, user, password, host, port, database):
+    def __init__(self, database):
         try:
-            self.connection = psycopg2.connect(user=user,
-                                               password=password,
-                                               host=host,
-                                               port=port,
-                                               database=database)
+            self.Connection = psycopg2.connect(user=database["user"],
+                                               password=database["password"],
+                                               host=database["host"],
+                                               port=database["port"],
+                                               database=database["database"])
 
-            self.cursor = self.connection.cursor()
+            self.Cursor = self.Connection.cursor()
             # Print PostgreSQL Connection properties
-            print(self.connection.get_dsn_parameters(), "\n")
+            print(self.Connection.get_dsn_parameters(), "\n")
 
             # Print PostgreSQL version
-            self.cursor.execute("SELECT version();")
-            record = self.cursor.fetchone()
+            self.Cursor.execute("SELECT version();")
+            record = self.Cursor.fetchone()
             print("You are connected to - ", record, "\n")
 
         except (Exception, psycopg2.Error) as error:
             print("Error while connecting to PostgreSQL", error)
 
+    def fetch(self, sql_query, values=()):
+        self.Cursor.execute(sql_query, values)
+        record = self.Cursor.fetchone()
+        print(record)
+
+    def execute(self, sql_query, values=()):
+        self.Cursor.execute(sql_query, values)
+        self.Connection.commit()
+        count = self.Cursor.rowcount
+        print(count, "Record Updated successfully ")
+
     def disconnect(self):
-        if self.connection:
-            self.cursor.close()
-            self.connection.close()
+        if self.Connection:
+            self.Cursor.close()
+            self.Connection.close()
             print("PostgreSQL connection is closed")
