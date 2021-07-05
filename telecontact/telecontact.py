@@ -4,13 +4,12 @@ import urllib.parse
 import json
 import logging
 
-
 URL="https://www.telecontact.ma/trouver/index.php?"
 QUERY_PARAMS={
     "nxo":"moteur",
     "nxs":"process",
     "string":"tech",
-    "ou":"Marrakech",
+    "ou":"casablanca",
     "aproximite":"",
     "produit":""
 }
