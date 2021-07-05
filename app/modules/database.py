@@ -4,37 +4,45 @@ import psycopg2
 class Database:
     def __init__(self, database):
         try:
-            self.Connection = psycopg2.connect(user=database["user"],
+            self.connection = psycopg2.connect(user=database["user"],
                                                password=database["password"],
                                                host=database["host"],
                                                port=database["port"],
                                                database=database["database"])
 
-            self.Cursor = self.Connection.cursor()
+            self.cursor = self.connection.cursor()
             # Print PostgreSQL Connection properties
-            print(self.Connection.get_dsn_parameters(), "\n")
+            print(self.connection.get_dsn_parameters(), "\n")
 
             # Print PostgreSQL version
-            self.Cursor.execute("SELECT version();")
-            record = self.Cursor.fetchone()
+            self.cursor.execute("SELECT version();")
+            record = self.cursor.fetchone()
             print("You are connected to - ", record, "\n")
 
         except (Exception, psycopg2.Error) as error:
             print("Error while connecting to PostgreSQL", error)
 
     def fetch(self, sql_query, values=()):
-        self.Cursor.execute(sql_query, values)
-        record = self.Cursor.fetchone()
+        self.cursor.execute(sql_query, values)
+        record = self.cursor.fetchone()
         print(record)
 
     def execute(self, sql_query, values=()):
-        self.Cursor.execute(sql_query, values)
-        self.Connection.commit()
-        count = self.Cursor.rowcount
+        self.cursor.execute(sql_query, values)
+        self.connection.commit()
+        count = self.cursor.rowcount
         print(count, "Record Updated successfully ")
 
     def disconnect(self):
-        if self.Connection:
-            self.Cursor.close()
-            self.Connection.close()
+        if self.connection:
+            self.cursor.close()
+            self.connection.close()
             print("PostgreSQL connection is closed")
+
+##
+
+# db = Database(support.DATABASE)
+#
+# db.execute("""  INSERT INTO Business (ID, NAME, CAPITAL) VALUES (%s,%s,%s) """, (1, 'One Plus', 20000))
+# db.fetch("""  SELECT 3 * 4; """)
+# db.disconnect()
