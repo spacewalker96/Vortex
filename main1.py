@@ -38,7 +38,7 @@ while True:
     src = result.content
     soup = BeautifulSoup(src,"lxml")
 
-    page_limit = 2
+    page_limit = 200
     if(page_number > page_limit):
         print("page end")
         break
@@ -49,30 +49,28 @@ while True:
     for i in range(len(link_tag)):
         sos_links.append("https://charika.ma/"+link_tag[i].find("a").attrs['href'])
     page_number += 1
-    print("page switched")
+    print(f"page switched {page_number}")
 
 for link in sos_links:
     webpage = requests.get(link, headers=header)
     soup = BeautifulSoup(webpage.content, "html.parser")
     dom = etree.HTML(str(soup))
-    adress =  dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[1]/span[2]/label/text()')
-    capital = dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[4]/div/div[1]/table/tbody/tr[3]/td[2]/text()')
-    title = str(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[1]/h1/a/text()'))
-    phone = dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[1]/span/span[2]/text()')
-    fax = dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[2]/span/span[2]/text()')
-    e_email = dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[3]/span/a/text()')
-    website = dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[4]/span/a/text()')
-    activity = dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[1]/div[2]/span/h2/text()')
-
-
-    title = title.split()
-    print(" ".join(title))
+    adress =  ''.join(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[1]/span[2]/label/text()')).strip()
+    capital = ''.join(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[4]/div/div[1]/table/tbody/tr[3]/td[2]/text()')).strip()
+    title = ''.join(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[1]/h1/a/text()')).strip()
+    phone = ''.join(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[1]/span/span[2]/text()')).strip()
+    fax = ''.join(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[2]/span/span[2]/text()')).strip()
+    e_email = ''.join(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[3]/span/a/text()')).strip()
+    website = ''.join(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[3]/div[2]/div[4]/span/a/text()')).strip()
+    activity = ''.join(dom.xpath('//*[@id="fiche"]/div[1]/div[1]/div/div[2]/div[1]/div[2]/span/h2/text()')).strip()
+    # print(title)
+    # print(adress)
 
     # print(re.sub(r"[\r\n\t]*", "", title))
 
-    # postgres_insert_query = """ INSERT INTO societe_table(title, adress, phone, fax,email,website,activity,capital) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
-    # record_to_insert = (title,adress, phone,fax,e_email, website,activity,capital)
-    # cursor.execute(postgres_insert_query, record_to_insert)
+    postgres_insert_query = """ INSERT INTO societe_table(title, adress, phone, fax,email,website,activity,capital) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"""
+    record_to_insert = (title,adress, phone,fax,e_email, website,activity,capital)
+    cursor.execute(postgres_insert_query, record_to_insert)
 
 
     # sos_adresse.append(adress)
