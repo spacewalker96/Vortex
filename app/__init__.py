@@ -6,27 +6,30 @@ from app.modules.vortex import Vortex
 
 
 def main():
-    # vortex = Vortex(configs)
-    # vortex.get_results()
-
-    # print(vortex.articles)  # Get address
-    # print(vortex.stats)
+    vortex = Vortex(configs, strategies.TELECONTACT_STRATEGY)
+    vortex.get_results()
+    print(vortex.stats)
 
     # stg = strategies.TELECONTACT_STRATEGY
     # for a in stg:
-    #     key = a
-    #     print(stg[key])
-    #     print(stg[key][0])
-    #     print(stg[key][1][0])
-    #     print(stg[key][1][1])
+    #     print(a)
+    #     print(stg[a])
+    #     print(stg[a][0])
+    #     print(stg[a][1][0])
+    #     print(stg[a][1][1])
+    #     if stg[a][0] == "find_child":
+    #         print(stg[a][2][0])
+    #         print(stg[a][2][1])
+
 
 ##
 
-    db = Database(configs.DATABASE)
-    #
-    # db.execute("""  INSERT INTO companies (ID, NAME, CAPITAL) VALUES (%s,%s,%s) """, (1, 'One Plus', 20000))
-    # db.fetch("""  SELECT 3 * 4; """)
-    db.disconnect()
+    # db = Database(configs.DATABASE)
+    # db.execute("""  INSERT INTO companies (NAME, DESCRIPTION, PRESTATIONS) VALUES (%s,%s,%s) """,
+    #            ('One Plus', 'Blabla lorem ipsum', 'Cuisine, Menage'))
+    # db.fetch(""" SELECT * FROM companies """)
+    # db.disconnect()
+
 
 if __name__ == "__main__":
     main()
