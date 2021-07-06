@@ -39,10 +39,4 @@ class Database:
             self.connection.close()
             print("PostgreSQL connection is closed")
 
-##
 
-# db = Database(support.DATABASE)
-#
-# db.execute("""  INSERT INTO Business (ID, NAME, CAPITAL) VALUES (%s,%s,%s) """, (1, 'One Plus', 20000))
-# db.fetch("""  SELECT 3 * 4; """)
-# db.disconnect()
