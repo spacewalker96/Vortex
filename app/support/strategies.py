@@ -1,11 +1,3 @@
-TELECONTACT_SCHEMA = {
-    "name": None,
-    "address": None,
-    "description": None,
-    "prestation": None,
-    "phone_number": None,
-    "website": None
-}
 TELECONTACT_STRATEGY = {
     "name": ["find_child", ["h2", {"itemprop": "name"}], ["span", {"id": "resultats_h3_span"}]],
     "address": ["find", ["div", {"class": "results-adress"}]],

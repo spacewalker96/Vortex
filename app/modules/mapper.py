@@ -2,25 +2,25 @@ from bs4 import BeautifulSoup
 
 
 class Mapper:
-    def __init__(self):
-        self.articles = []
+    def __init__(self, strategy):
+        self.strategy = strategy
+        self.soup = ""
+        self.records = []
 
     def get_articles(self, response):
-        partial_soup = BeautifulSoup(response.content, features="lxml")
-        return partial_soup.find_all("article", {"itemprop": "itemListElement"})
+        self.soup = BeautifulSoup(response.content, features="lxml")
+        return self.soup.find_all("article", {"itemprop": "itemListElement"})
 
-    def map_by_strategy(self, strategy):
-        frame = 0
+    def map_by_strategy(self):
         funcs = self.load_funcs()
-        for action in strategy:
-            if action == "find_child":
-                funcs[action](strategy[action][0][0],
-                              strategy[action][0][1],
-                              strategy[action][1][0],
-                              strategy[action][1][1])
+        for action in self.strategy:
+            if self.strategy[action][0] == "find_child":
+                test_child = funcs[self.strategy[action][0]](self.strategy[action][1][0], self.strategy[action][1][1],
+                                                             self.strategy[action][2][0], self.strategy[action][2][1])
+                print(f"Map {action} using {self.strategy[action][0]} and get: {test_child}")
             else:
-                funcs[action](action[0][0], action[0][1])
-            frame += 1
+                test = funcs[self.strategy[action][0]](self.strategy[action][1][0], self.strategy[action][1][1])
+                print(f"Map {action} using {self.strategy[action][0]} and get: {test}")
 
     def load_funcs(self):
         stored_funcs = {
@@ -32,23 +32,23 @@ class Mapper:
         return stored_funcs
 
     def find(self, tag, target):
-        data = self.articles.find(tag, target)
+        data = self.soup.find(tag, target)
         if data and data.text.strip():
             return data.text.strip()
 
     def find_child(self, tag, target, child_tag, child_target):
-        data = self.articles.find(tag, target).findChild(child_tag, child_target)
+        data = self.soup.find(tag, target).findChild(child_tag, child_target)
         if data and data.text.strip():
             return data.text.strip()
 
     def find_all(self, tag, target):
-        data = self.articles.find_all(tag, target)
+        data = self.soup.find_all(tag, target)
         if data:
             map_data = ' '.join(map(lambda a: a.text.strip(), data))
             return map_data
 
     def get_href(self, tag, target):
-        data = self.articles.find(tag, target)
+        data = self.soup.find(tag, target)
         if data:
             return data.get("href")
 

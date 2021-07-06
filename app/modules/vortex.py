@@ -4,8 +4,8 @@ from app.modules.mapper import Mapper
 
 
 class Vortex(Mapper):
-    def __init__(self, configs):
-        super().__init__()
+    def __init__(self, configs, strategy):
+        super().__init__(strategy)
         self.config = configs
         self.soup = []
         self.stats = {
@@ -28,7 +28,9 @@ class Vortex(Mapper):
 
             partial_articles = self.get_articles(rsp)
             for article in partial_articles:
-                company_details = self.get_company_details(article)
+                # company_details = self.get_company_details(article)
+                company_details = self.map_by_strategy()
+                print(f"Mapped object: {company_details}")
                 page_results.append(company_details)
         except Exception as e:
             print("Error while get page results", e)
