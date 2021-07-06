@@ -20,18 +20,20 @@ class Vortex(Mapper):
         return request
 
     def get_page_results(self, request):
-        partial_articles = []
+        page_results = []
         try:
             rsp = requests.get(request, headers=self.config.REQUEST_HEADERS)
             if rsp.status_code != 200:
                 raise (Exception("REQUEST FAILED WITH STATUS CODE {rsp.status_code}"))
 
             partial_articles = self.get_articles(rsp)
-
+            for article in partial_articles:
+                company_details = self.get_company_details(article)
+                page_results.append(company_details)
         except Exception as e:
             print("Error while get page results", e)
 
-        return partial_articles
+        return page_results
 
     def get_results(self):
         page = 1
@@ -45,4 +47,4 @@ class Vortex(Mapper):
                 break
             page += 1
 
-        self.stats["num_results"] = len(self.soup)
+        self.stats["num_results"] = len(self.articles)

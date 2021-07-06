@@ -7,7 +7,7 @@ class Mapper:
 
     def get_articles(self, response):
         partial_soup = BeautifulSoup(response.content, features="lxml")
-        return self.soup.find_all("article", {"itemprop": "itemListElement"})
+        return partial_soup.find_all("article", {"itemprop": "itemListElement"})
 
     def map_by_strategy(self, strategy):
         frame = 0
@@ -51,3 +51,45 @@ class Mapper:
         data = self.articles.find(tag, target)
         if data:
             return data.get("href")
+
+    def get_company_details(self, company):
+        company_details = {
+            "name": None,
+            "description": None,
+            "prestations": None,
+            "address": None,
+            "phone_number": None,
+            "email": None,
+            "website": None
+        }
+        # company name
+        name = company.find("h2", {"itemprop": "name"}).findChild("span", {"id": "resultats_h3_span"})
+        if name and name.text.strip():
+            company_details["name"] = name.text.strip()
+
+            # company address
+        address = company.find("div", {"class": "results-adress"})
+        if address and address.text.strip():
+            company_details["address"] = address.text.strip()
+
+            # company description
+        description = company.find("div", {"class": "description"})
+        if description and description.text.strip():
+            company_details["description"] = description.text.strip()
+
+            # company prestations
+        prestations = company.find_all("a", {"class": "rubrique-client"})
+        if prestations:
+            company_details["prestations"] = ' '.join(map(lambda a: a.text.strip(), prestations))
+
+            # company phone_number
+        phone_number = company.find("div", {"class": "tel"})
+        if phone_number and phone_number.text.strip():
+            company_details["phone_number"] = phone_number.text.strip()
+
+        # company website
+        website = company.find("a", {"itemprop": "url"})
+        if website:
+            company_details["website"] = website.get("href")
+
+        return company_details
