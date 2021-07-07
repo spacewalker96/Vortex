@@ -1,14 +1,15 @@
-from support import configs
-from support import strategies
+from configs import database
+from strategies import telecontact
 from modules.database import Database
 # from app.modules.mapper import Mapper
 from app.modules.vortex import Vortex
 
 
 def main():
-    vortex = Vortex(configs, strategies.TELECONTACT_STRATEGY)
+    vortex = Vortex(database, telecontact)
     vortex.get_results()
     print(vortex.stats)
+    vortex.extract_data()
 
     # stg = strategies.TELECONTACT_STRATEGY
     # for a in stg:

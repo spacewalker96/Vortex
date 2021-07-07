@@ -4,23 +4,42 @@ from bs4 import BeautifulSoup
 class Mapper:
     def __init__(self, strategy):
         self.strategy = strategy
-        self.soup = ""
+        self.map = strategy.STRATEGY
+        self.articles = []
         self.records = []
 
     def get_articles(self, response):
-        self.soup = BeautifulSoup(response.content, features="lxml")
-        return self.soup.find_all("article", {"itemprop": "itemListElement"})
+        beauty_soup = BeautifulSoup(response.content, features="lxml")
+        new_articles = beauty_soup.find_all(self.strategy.SHARP["tag"],
+                                            self.strategy.SHARP["element"])
+        if new_articles:
+            for article in new_articles:
+                self.articles.append(article)
+            return False
+        else:
+            return True
 
-    def map_by_strategy(self):
+    def extract_data(self):
+        print("[+] Extracting data...")
+        index = 0
+        for article in self.articles:
+            self.map_by_strategy(index)
+            index += 1
+
+    def map_by_strategy(self, index):
         funcs = self.load_funcs()
-        for action in self.strategy:
-            if self.strategy[action][0] == "find_child":
-                test_child = funcs[self.strategy[action][0]](self.strategy[action][1][0], self.strategy[action][1][1],
-                                                             self.strategy[action][2][0], self.strategy[action][2][1])
-                print(f"Map {action} using {self.strategy[action][0]} and get: {test_child}")
+        mapped_object = {}
+        for target in self.map:
+            if self.map[target][0] == "find_child":
+                data_child = funcs[self.map[target][0]](index,
+                                                             self.map[target][1][0], self.map[target][1][1],
+                                                             self.map[target][2][0], self.map[target][2][1])
+                mapped_object[target] = data_child
             else:
-                test = funcs[self.strategy[action][0]](self.strategy[action][1][0], self.strategy[action][1][1])
-                print(f"Map {action} using {self.strategy[action][0]} and get: {test}")
+                data = funcs[self.map[target][0]](index, self.map[target][1][0], self.map[target][1][1])
+                mapped_object[target] = data
+        print(mapped_object)
+        self.records.append(mapped_object)
 
     def load_funcs(self):
         stored_funcs = {
@@ -31,65 +50,23 @@ class Mapper:
         }
         return stored_funcs
 
-    def find(self, tag, target):
-        data = self.soup.find(tag, target)
+    def find(self, index, tag, target):
+        data = self.articles[index].find(tag, target)
         if data and data.text.strip():
             return data.text.strip()
 
-    def find_child(self, tag, target, child_tag, child_target):
-        data = self.soup.find(tag, target).findChild(child_tag, child_target)
+    def find_child(self, index, tag, target, child_tag, child_target):
+        data = self.articles[index].find(tag, target).findChild(child_tag, child_target)
         if data and data.text.strip():
             return data.text.strip()
 
-    def find_all(self, tag, target):
-        data = self.soup.find_all(tag, target)
+    def find_all(self, index, tag, target):
+        data = self.articles[index].find_all(tag, target)
         if data:
             map_data = ' '.join(map(lambda a: a.text.strip(), data))
             return map_data
 
-    def get_href(self, tag, target):
-        data = self.soup.find(tag, target)
+    def get_href(self, index, tag, target):
+        data = self.articles[index].find(tag, target)
         if data:
             return data.get("href")
-
-    def get_company_details(self, company):
-        company_details = {
-            "name": None,
-            "description": None,
-            "prestations": None,
-            "address": None,
-            "phone_number": None,
-            "email": None,
-            "website": None
-        }
-        # company name
-        name = company.find("h2", {"itemprop": "name"}).findChild("span", {"id": "resultats_h3_span"})
-        if name and name.text.strip():
-            company_details["name"] = name.text.strip()
-
-            # company address
-        address = company.find("div", {"class": "results-adress"})
-        if address and address.text.strip():
-            company_details["address"] = address.text.strip()
-
-            # company description
-        description = company.find("div", {"class": "description"})
-        if description and description.text.strip():
-            company_details["description"] = description.text.strip()
-
-            # company prestations
-        prestations = company.find_all("a", {"class": "rubrique-client"})
-        if prestations:
-            company_details["prestations"] = ' '.join(map(lambda a: a.text.strip(), prestations))
-
-            # company phone_number
-        phone_number = company.find("div", {"class": "tel"})
-        if phone_number and phone_number.text.strip():
-            company_details["phone_number"] = phone_number.text.strip()
-
-        # company website
-        website = company.find("a", {"itemprop": "url"})
-        if website:
-            company_details["website"] = website.get("href")
-
-        return company_details

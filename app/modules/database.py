@@ -38,5 +38,3 @@ class Database:
             self.cursor.close()
             self.connection.close()
             print("PostgreSQL connection is closed")
-
-
