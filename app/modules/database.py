@@ -27,7 +27,7 @@ class Database:
             print("Error while connecting to PostgreSQL", error)
 
     def store_multiple_dict(self, list_obj, target):
-        print("[+] Storing data into database")
+        print(f"[+] Storing {target} data into database")
         timestamp = date.today()
         for obj in list_obj:
             new_id = str(uuid.uuid4())
