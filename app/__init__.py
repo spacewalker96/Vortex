@@ -6,7 +6,7 @@ from app.modules.vortex import Vortex
 
 def main():
     vortex_telecontact = Vortex(telecontact)
-    vortex_telecontact.get_results(1, 2)
+    vortex_telecontact.get_results(3, 4)
     print(vortex_telecontact.stats)
     vortex_telecontact.extract_data()
     print(vortex_telecontact.records)
@@ -17,10 +17,11 @@ def main():
     vortex_charika.extract_data()
     print(vortex_charika.records)
 
-    # db = Database(database.DATABASE)
-    # db.store_multiple_dict(vortex.records, telecontact.NAME)
-    # db.fetch(""" SELECT * FROM companies """)
-    # db.disconnect()
+    db = Database(database.DATABASE)
+    db.store_multiple_dict(vortex_telecontact.records, telecontact.NAME)
+    db.store_multiple_dict(vortex_charika.records, charika.NAME)
+    db.fetch(""" SELECT * FROM companies """)
+    db.disconnect()
 
 
 if __name__ == "__main__":
