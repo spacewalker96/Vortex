@@ -4,18 +4,19 @@ from app.modules.mapper import Mapper
 
 
 class Vortex(Mapper):
-    def __init__(self, configs, strategy):
+    def __init__(self, strategy):
         super().__init__(strategy)
-        self.config = configs
-        self.soup = []
         self.stats = {
             "num_results": 0
         }
 
     def build_request(self, page):
         request = self.strategy.URL
-        request += urllib.parse.urlencode(self.strategy.QUERY_PARAMS)
-        request += f"&page={page}"
+        if self.strategy.QUERY_PARAMS:
+            request += urllib.parse.urlencode(self.strategy.QUERY_PARAMS)
+            request += f"&page={page}"
+        else:
+            request += str(page)
         print(f"[+] request:{request}")
         return request
 
@@ -33,16 +34,15 @@ class Vortex(Mapper):
 
         return end
 
-    def get_results(self):
-        print("[+] Scraping start...")
-        page = 1
+    def get_results(self, current=1, finish=None):
+        print(f"[+] Start scraping using \"{self.strategy.NAME}\" strategy...")
         while True:
-            request = self.build_request(page)
+            request = self.build_request(current)
             end = self.get_page_results(request)
-            if end:
+            if end or current == finish:
                 print("[+] Done!")
                 break
 
-            page += 1
+            current += 1
 
         self.stats["num_results"] = len(self.articles)

@@ -1,33 +1,24 @@
 from configs import database
-from strategies import telecontact
+from strategies import telecontact, charika
 from modules.database import Database
-# from app.modules.mapper import Mapper
 from app.modules.vortex import Vortex
 
 
 def main():
-    vortex = Vortex(database, telecontact)
-    vortex.get_results()
-    print(vortex.stats)
-    vortex.extract_data()
+    vortex_telecontact = Vortex(telecontact)
+    vortex_telecontact.get_results(1, 2)
+    print(vortex_telecontact.stats)
+    vortex_telecontact.extract_data()
+    print(vortex_telecontact.records)
 
-    # stg = strategies.TELECONTACT_STRATEGY
-    # for a in stg:
-    #     print(a)
-    #     print(stg[a])
-    #     print(stg[a][0])
-    #     print(stg[a][1][0])
-    #     print(stg[a][1][1])
-    #     if stg[a][0] == "find_child":
-    #         print(stg[a][2][0])
-    #         print(stg[a][2][1])
+    vortex_charika = Vortex(charika)
+    vortex_charika.get_results(1, 2)
+    print(vortex_charika.stats)
+    vortex_charika.extract_data()
+    print(vortex_charika.records)
 
-
-##
-
-    # db = Database(configs.DATABASE)
-    # db.execute("""  INSERT INTO companies (NAME, DESCRIPTION, PRESTATIONS) VALUES (%s,%s,%s) """,
-    #            ('One Plus', 'Blabla lorem ipsum', 'Cuisine, Menage'))
+    # db = Database(database.DATABASE)
+    # db.store_multiple_dict(vortex.records, telecontact.NAME)
     # db.fetch(""" SELECT * FROM companies """)
     # db.disconnect()
 

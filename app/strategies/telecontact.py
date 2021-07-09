@@ -1,9 +1,10 @@
+NAME = "Telecontact"
 URL = "https://www.telecontact.ma/trouver/index.php?"
 QUERY_PARAMS = {
     "nxo": "moteur",
     "nxs": "process",
     "string": "tech",
-    "ou": "Rabat",
+    "ou": "casablanca",
     "aproximite": "",
     "produit": ""
 }

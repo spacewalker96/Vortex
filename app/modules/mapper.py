@@ -12,6 +12,7 @@ class Mapper:
         beauty_soup = BeautifulSoup(response.content, features="lxml")
         new_articles = beauty_soup.find_all(self.strategy.SHARP["tag"],
                                             self.strategy.SHARP["element"])
+        print(f"[+] Get {len(new_articles)} new articles...")
         if new_articles:
             for article in new_articles:
                 self.articles.append(article)
@@ -20,8 +21,8 @@ class Mapper:
             return True
 
     def extract_data(self):
-        print("[+] Extracting data...")
         index = 0
+        print("[+] Extracting data...")
         for article in self.articles:
             self.map_by_strategy(index)
             index += 1
@@ -32,13 +33,13 @@ class Mapper:
         for target in self.map:
             if self.map[target][0] == "find_child":
                 data_child = funcs[self.map[target][0]](index,
-                                                             self.map[target][1][0], self.map[target][1][1],
-                                                             self.map[target][2][0], self.map[target][2][1])
+                                                        self.map[target][1][0], self.map[target][1][1],
+                                                        self.map[target][2][0], self.map[target][2][1])
                 mapped_object[target] = data_child
             else:
                 data = funcs[self.map[target][0]](index, self.map[target][1][0], self.map[target][1][1])
                 mapped_object[target] = data
-        print(mapped_object)
+        # print(mapped_object)
         self.records.append(mapped_object)
 
     def load_funcs(self):
@@ -46,27 +47,27 @@ class Mapper:
             "find": self.find,
             "find_child": self.find_child,
             "find_all": self.find_all,
-            "get_href": self.get_href
+            "get_href": self.get_href,
         }
         return stored_funcs
 
-    def find(self, index, tag, target):
+    def find(self, index, tag, target=None):
         data = self.articles[index].find(tag, target)
         if data and data.text.strip():
             return data.text.strip()
 
-    def find_child(self, index, tag, target, child_tag, child_target):
+    def find_child(self, index, tag, target, child_tag, child_target=None):
         data = self.articles[index].find(tag, target).findChild(child_tag, child_target)
         if data and data.text.strip():
             return data.text.strip()
 
-    def find_all(self, index, tag, target):
+    def find_all(self, index, tag, target=None):
         data = self.articles[index].find_all(tag, target)
         if data:
             map_data = ' '.join(map(lambda a: a.text.strip(), data))
             return map_data
 
-    def get_href(self, index, tag, target):
+    def get_href(self, index, tag, target=None):
         data = self.articles[index].find(tag, target)
         if data:
             return data.get("href")
