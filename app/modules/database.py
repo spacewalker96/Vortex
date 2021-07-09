@@ -33,7 +33,7 @@ class Database:
             new_id = str(uuid.uuid4())
             self.execute("""  INSERT INTO companies (id, dict, target, timestamp) VALUES (%s, %s, %s, %s) """,
                          [new_id, Json(obj), target, timestamp])
-        print(f"[+] {self.cursor.rowcount} rows stored!")
+        print(f"[+] {len(list_obj)} rows stored!")
 
     def fetch(self, sql_query, values=()):
         self.cursor.execute(sql_query, values)
