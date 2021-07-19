@@ -7,6 +7,19 @@ class Mapper:
         self.map = strategy.STRATEGY
         self.articles = []
         self.records = []
+        self.links = []
+
+    def get_links(self, response):
+        beauty_soup = BeautifulSoup(response.content, features="lxml")
+        new_links = beauty_soup.find_all(self.strategy.LINK["tag"],
+                                         self.strategy.LINK["element"])
+        print(f"[+] Get {len(new_links)} new links...")
+        if new_links:
+            for link in new_links:
+                self.links.append(link.get("href"))
+            return False
+        else:
+            return True
 
     def get_articles(self, response):
         beauty_soup = BeautifulSoup(response.content, features="lxml")

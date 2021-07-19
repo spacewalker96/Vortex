@@ -6,7 +6,7 @@ from datetime import date
 
 class Database:
     def __init__(self, database):
-        print("[+] Connect to database...")
+        print("[+] Connecting to database...")
         try:
             self.connection = psycopg2.connect(user=database["user"],
                                                password=database["password"],
@@ -21,7 +21,7 @@ class Database:
             # Print PostgreSQL version
             self.cursor.execute("SELECT version();")
             record = self.cursor.fetchone()
-            print("[+] You are connected to - ", record, "\n")
+            print("[+] Connecting succeed to - ", record, "\n")
 
         except (Exception, psycopg2.Error) as error:
             print("Error while connecting to PostgreSQL", error)

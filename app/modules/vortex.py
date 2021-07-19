@@ -27,7 +27,8 @@ class Vortex(Mapper):
             if rsp.status_code != 200:
                 raise (Exception("REQUEST FAILED WITH STATUS CODE {rsp.status_code}"))
 
-            end = self.get_articles(rsp)
+            end = self.get_links(rsp)
+            # end = self.get_articles(rsp)
 
         except Exception as e:
             print("Error while get page results", e)
@@ -45,4 +46,5 @@ class Vortex(Mapper):
 
             current += 1
 
-        self.stats["num_results"] = len(self.articles)
+        self.stats["num_results"] = len(self.links)
+        # self.stats["num_results"] = len(self.articles)
