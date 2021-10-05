@@ -17,14 +17,11 @@ class Mapper:
         if new_links:
             for link in new_links:
                 self.links.append(link.get("href"))
-            return False
-        else:
-            return True
 
     def get_articles(self, response):
         beauty_soup = BeautifulSoup(response.content, features="lxml")
-        new_articles = beauty_soup.find_all(self.strategy.SHARP["tag"],
-                                            self.strategy.SHARP["element"])
+        new_articles = beauty_soup.find_all(self.strategy.ARTICLES["tag"],
+                                            self.strategy.ARTICLES["element"])
         print(f"[+] Get {len(new_articles)} new articles...")
         if new_articles:
             for article in new_articles:
@@ -32,6 +29,12 @@ class Mapper:
             return False
         else:
             return True
+
+    def get_article(self, response):
+        beauty_soup = BeautifulSoup(response.content, features="lxml")
+        new_article = beauty_soup.find(self.strategy.ARTICLE["tag"],
+                                       self.strategy.ARTICLE["element"])
+        return new_article
 
     def extract_data(self):
         index = 0
@@ -52,7 +55,7 @@ class Mapper:
             else:
                 data = funcs[self.map[target][0]](index, self.map[target][1][0], self.map[target][1][1])
                 mapped_object[target] = data
-        # print(mapped_object)
+        print(mapped_object)
         self.records.append(mapped_object)
 
     def load_funcs(self):

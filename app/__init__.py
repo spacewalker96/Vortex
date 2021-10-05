@@ -6,11 +6,13 @@ from app.modules.vortex import Vortex
 
 def main():
     vortex_telecontact = Vortex(telecontact)
-    vortex_telecontact.get_results(1, 5)
+    vortex_telecontact.sharp_links(1, 1)
+    vortex_telecontact.sharp_articles()
     print(vortex_telecontact.stats)
-    # vortex_telecontact.extract_data()
-    # print(vortex_telecontact.records)
+    vortex_telecontact.extract_data()
     print(vortex_telecontact.links)
+    print(vortex_telecontact.articles[0])
+    print(vortex_telecontact.records)
 
     # vortex_charika = Vortex(charika)
     # vortex_charika.get_results(1, 2)

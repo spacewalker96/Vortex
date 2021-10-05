@@ -1,9 +1,10 @@
 NAME = "Telecontact"
+DEFAULT = "https://www.telecontact.ma/"
 URL = "https://www.telecontact.ma/trouver/index.php?"
 QUERY_PARAMS = {
     "nxo": "moteur",
     "nxs": "process",
-    "string": "tech",
+    "string": "",
     "ou": "casablanca",
     "aproximite": "",
     "produit": ""
@@ -16,12 +17,16 @@ LINK = {
     "tag": "a",
     "element": {"class": "moodalbox"}
 }
-SHARP = {
+ARTICLES = {
     "tag": "article",
     "element": {"itemprop": "itemListElement"}
 }
+ARTICLE = {
+    "tag": "div",
+    "element": {"itemtype": "http://schema.org/LocalBusiness"}
+}
 STRATEGY = {
-    "name": ["find_child", ["h2", {"itemprop": "name"}], ["span", {"id": "resultats_h3_span"}]],
+    "name": ["find_child", ["a", {"itemtype": "https://schema.org/WebPage"}], ["span", {"itemprop": "name"}]],
     "address": ["find", ["div", {"class": "results-adress"}]],
     "description": ["find", ["div", {"class": "description"}]],
     "prestation": ["find_all", ["a", {"class": "rubrique-client"}]],
